@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,6 +6,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private SpriteRenderer playerSR;
+    [SerializeField] private Animator playerAnim;
     private Rigidbody2D rb;
 
     float walkSpeed = 4f;
@@ -25,6 +27,41 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        HandleMovement();
+        HandleFlip();
+        HandleAnim();
+    }
+
+    private void HandleAnim()
+    {
+        if (inputHorizontal != 0 || inputVertical !=0)
+        {
+            playerAnim.Play("Walk");
+        }
+        else
+        {
+            playerAnim.Play("Idle");
+        }
+    }
+
+    private void HandleFlip()
+    {
+        if (inputHorizontal !=0)
+        {
+            
+            if (!playerSR.flipX && inputHorizontal > 0)
+            {
+                playerSR.flipX = true;
+            }
+            else if (playerSR.flipX && inputHorizontal < 0)
+            {
+                playerSR.flipX = false;
+            }
+        }
+    }
+
+    private void HandleMovement()
+    {
         if (inputHorizontal != 0 || inputVertical != 0)
         {
             if (inputHorizontal != 0 && inputVertical != 0)
@@ -37,7 +74,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            rb.velocity = new Vector2(0,0);
+            rb.velocity = new Vector2(0, 0);
         }
     }
 }
